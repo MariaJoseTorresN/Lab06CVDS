@@ -4,8 +4,8 @@ public class PersistenceException extends Exception{
 
     public final static String MENSAJE_ERROR = "Error de persistencia";
 
-    public PersistenceException(String message){
-        super(message);
+    public PersistenceException(String message, org.apache.ibatis.exceptions.PersistenceException e){
+        super(message + " " + e.toString());
     }
 
 }
