@@ -1,0 +1,42 @@
+.ui-button{
+    color: red;
+    background-color: yellow;
+    font-family: impact;
+    border: 1px solid powderblue;
+    width: 10em;
+    height: 5em;
+}
+body {
+    background: blue;
+    text-align: center;
+    font-family: Verdana, "impact",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;    
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+}
+label.premioa{
+	
+	font-size: 18px;
+	width: 10em; 
+	margin-left: 30px
+	
+}
+
+.Table{
+	position: absolute;
+	right: 60px;
+	top: 50px;
+}
+input[type=int]{
+	width: 12%;
+	text-align: center;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	font-size: 18px;
+	background-color: white;
+	margin: 9px 66px;
+	padding: 8px 6px 8px 6px;
+	outline: none;
+}
