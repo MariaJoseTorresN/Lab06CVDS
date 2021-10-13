@@ -91,7 +91,71 @@ public class AlquilerItemsBean extends BasePageBean{
             Logger.getLogger(AlquilerItemsBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public void rentarItem(){
+        try {
+            Item rentado=serviciosAlquiler.consultarItem(item[0]);
+            serviciosAlquiler.registrarAlquilerCliente(new Date(System.currentTimeMillis()), seleccionado.getDocumento(), rentado, item[1]);
+            costo=0;
+            item= new int[2];
+        } catch (ExcepcionServiciosAlquiler ex) {
+            Logger.getLogger(AlquilerItemsBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+
+    public Cliente getSeleccionado() {
+        return seleccionado;
+    }
+
+    public void setSeleccionado(Cliente seleccionado) {
+        this.seleccionado = seleccionado;
+        try{
+        disponibles = serviciosAlquiler.consultarItemsDisponibles();
+        }catch(ExcepcionServiciosAlquiler ex){
+            
+        }
+        consultarItemsRentados();
+        consultarMulta();
+    }
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
+    }
+
+    public List<Item> getDisponibles() {
+        return disponibles;
+    }
+
+    public void setDisponibles(List<Item> disponibles) {
+        this.disponibles = disponibles;
+    }
+
+    public List<ItemRentado> getRentados() {
+        return rentados;
+    }
+
+    public void setRentados(List<ItemRentado> rentados) {
+        this.rentados = rentados;
+    }
+
+    public long getMulta() {
+        return multa;
+    }
+
+    public void setMulta(long multa) {
+        this.multa = multa;
+    }
+
+    public long getCosto() {
+        return costo;
+    }
+
+    public void setCosto(long costo) {
+        this.costo = costo;
+    }
     
     
 }
