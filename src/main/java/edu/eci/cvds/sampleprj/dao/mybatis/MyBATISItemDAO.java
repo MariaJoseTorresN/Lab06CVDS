@@ -7,7 +7,7 @@ import edu.eci.cvds.samples.entities.Item;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import java.util.List;
 
-public class MyBATISItemDao implements ItemDAO{
+public class MyBATISItemDAO implements ItemDAO{
 
   @Inject
   private ItemMapper itemMapper;    
