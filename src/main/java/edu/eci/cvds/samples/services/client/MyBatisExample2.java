@@ -18,27 +18,22 @@ package edu.eci.cvds.samples.services.client;
 
 
 
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Date;
-
+import java.text.ParseException;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
-import edu.eci.cvds.sampleprj.dao.mybatis.mappers.TipoItemMapper;
-import edu.eci.cvds.samples.entities.Item;
-import edu.eci.cvds.samples.entities.TipoItem;
-
 /**
  *
  * @author hcadavid
  */
-public class MyBatisExample {
+public class MyBatisExample2{
 
     /**
      * Método que construye una fábrica de sesiones de MyBatis a partir del
@@ -65,32 +60,30 @@ public class MyBatisExample {
      * @param args
      * @throws SQLException 
      */
-    public static void main(String args[]) throws SQLException {
+    public static void main(String args[]) throws SQLException, ParseException {
         SqlSessionFactory sessionfact = getSqlSessionFactory();
 
-        try(SqlSession sqlss = sessionfact.openSession()) {
-            //Mappers
-            ClienteMapper clienteMapper = sqlss.getMapper(ClienteMapper.class);
-            ItemMapper itemMapper = sqlss.getMapper(ItemMapper.class);
-            TipoItemMapper tipoItemMapper = sqlss.getMapper(TipoItemMapper.class);
-            
-            //Pruebas Mapper Usuario OK
-            //System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
-            //System.out.println(clienteMapper.consultarCliente(98347)); //Bill Clinton
+        SqlSession sqlss = sessionfact.openSession();
+        
+        ClienteMapper cm=sqlss.getMapper(ClienteMapper.class);
 
-            //Pruebas Mapper Item OK
-            //System.out.println(itemMapper.consultarItem(2));
-            //System.out.println(itemMapper.consultarItems());
+        System.out.println(cm.consultarClientes());
+        System.out.println(cm.consultarCliente(1));
+        System.out.println(cm.consultarCliente(2157329));
+        
+        ItemMapper im = sqlss.getMapper(ItemMapper.class);
+        System.out.println(im.consultarItems());
+        System.out.println(im.consultarItem(100));
+        
+        
+        sqlss.commit();
+       
+        sqlss.close();
+        
 
-            //Insertar tipo item NO Ok
-            tipoItemMapper.addTipoItem("Kristhian");
-            TipoItem tipo = tipoItemMapper.getTipoItem(1);
-            itemMapper.insertarItem(new Item(tipo, 3467289, "Kristhian", "xd", new Date(), 50000, "formatoRenta", "undefined"));
-            clienteMapper.agregarItemRentadoACliente(98347, 3467287, new Date(), new Date());
-            sqlss.commit();
-            sqlss.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
+        
     }
+
+
 }
