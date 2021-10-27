@@ -2,6 +2,21 @@
 ### Ciclos de Vida del desarrollo de Software – CVDS
 #### Tecnologías de persistencia - Frameworks de Persistencia - Introducción a MyBatis
 
+## SECCIÓN I. - INTRODUCCIÓN A JDBC
+
+1. nombresProductosPedido
+
+![](img/nombrePro.png)
+
+2. valorTotalPedido
+
+![](img/valorPed.png)
+ 
+3. registrarNuevoProducto
+ 
+![](img/insert.png)
+
+## SECCIÓN II. - INTRODUCCIÓN A MYBATIS
 
 En este laboratorio se utilizará un 'framework' de persistencia. La base de datos que se utilizará tiene los siguientes parámetros:
 
@@ -30,18 +45,15 @@ En este laboratorio se utilizará un 'framework' de persistencia. La base de dat
 
 	```sql
 		select
-        
         c.nombre,
         c.documento,
         c.telefono,
         c.direccion,
         c.email,
         c.vetado,
-        
         ir.id ,
         ir.fechainiciorenta ,
         ir.fechafinrenta ,
-        
         i.id ,
         i.nombre ,
         i.descripcion ,
@@ -51,8 +63,6 @@ En este laboratorio se utilizará un 'framework' de persistencia. La base de dat
         i.genero ,        
         ti.id ,
         ti.descripcion 
-
-        
         FROM VI_CLIENTES as c 
         left join VI_ITEMRENTADO as ir on c.documento=ir.CLIENTES_documento 
         left join VI_ITEMS as i on ir.ITEMS_id=i.id 
@@ -143,6 +153,8 @@ En este laboratorio se utilizará un 'framework' de persistencia. La base de dat
 	...
 	```
 
+    ![](img/prueba1.png)
+
 
 ## Parte II (para el Miércoles)
 
@@ -162,10 +174,18 @@ En este laboratorio se utilizará un 'framework' de persistencia. La base de dat
 
 2. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
 
+    ![](img/prueba2.png)
+
 3. Configure en el XML correspondiente, la operación agregarItemRentadoACliente. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+    ![](img/agregarItRent.png)
+    ![](img/agregarItRent2.png)
+    ![](img/agregarItRent3.png)
 
 4. Configure en el XML correspondiente (en este caso ItemMapper.xml) la operación 'insertarItem(Item it). Para este tenga en cuenta:
 	* Al igual que en en los dos casos anteriores, el query estará basado en los parámetros ingresados (en este caso, un objeto Item). En este caso, al hacer uso de la anotación @Param, la consulta SQL se podrá componer con los atributos de dicho objeto. Por ejemplo, si al paramétro se le da como nombre ("item"): __insertarItem(@Param("item")Item it)__, en el query se podría usar #{item.id}, #{item.nombre}, #{item.descripcion}, etc. Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+    ![](img/agregarItem.png)
 	
 5. 	Configure en el XML correspondiente (de nuevo en ItemMapper.xml) las operaciones 'consultarItem(int it) y 'consultarItems()' de ItemMapper. En este caso, tenga adicionalmente en cuenta:
 	* Para poder configurar dichas operaciones, se necesita el 'resultMap' definido en ClientMapper. Para evitar tener CODIGO REPETIDO, mueva el resultMap _ItemResult_ de ClienteMapper.xml a ItemMapper.xml. Luego, como dentro de ClienteMapper el resultMap _ItemRentadoResult_ requiere del resultMap antes movido, haga referencia al mismo usando como referencia absoluta en 'namespace' de ItemMapper.xml:
@@ -177,3 +197,5 @@ En este laboratorio se utilizará un 'framework' de persistencia. La base de dat
 	```
 	
 	Verifique el funcionamiento haciendo una consulta a través del 'mapper' desde MyBatisExample.
+
+    ![](img/consultarItems.png)
