@@ -57,8 +57,8 @@ public class JDBCExample {
             System.out.println("-----------------------");
             
             
-            int suCodigoECI=20134423;
-            registrarNuevoProducto(con, suCodigoECI, "SU NOMBRE", 99999999);            
+            int suCodigoECI=2163298;
+            registrarNuevoProducto(con, suCodigoECI, "Majo", 99999999);            
             con.commit();
                         
             
