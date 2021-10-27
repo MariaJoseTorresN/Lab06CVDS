@@ -20,21 +20,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-
 /**
  *
  * @author hcadavid
  */
 public class JDBCExample {
-
+    
     public static void main(String args[]){
         try {
             String url="jdbc:mysql://desarrollo.is.escuelaing.edu.co:3306/bdprueba";
@@ -45,11 +42,10 @@ public class JDBCExample {
             Class.forName(driver);
             Connection con=DriverManager.getConnection(url,user,pwd);
             con.setAutoCommit(false);
-
-            System.out.println("Conexion exitosa");
                  
+            
             System.out.println("Valor total pedido 1:"+valorTotalPedido(con, 1));
-
+            
             List<String> prodsPedido=nombresProductosPedido(con, 1);
             
             
@@ -60,9 +56,11 @@ public class JDBCExample {
             }
             System.out.println("-----------------------");
             
-            int suCodigoECI=2166132;
-            registrarNuevoProducto(con, suCodigoECI, "Maria Jose Torres", 1000000);   
-            con.commit(); 
+            
+            int suCodigoECI=20134423;
+            registrarNuevoProducto(con, suCodigoECI, "SU NOMBRE", 99999999);            
+            con.commit();
+                        
             
             con.close();
                                    
@@ -82,17 +80,20 @@ public class JDBCExample {
      * @throws SQLException 
      */
     public static void registrarNuevoProducto(Connection con, int codigo, String nombre,int precio) throws SQLException{
-        String createProduct = "INSERT INTO ORD_PRODUCTOS VALUES(?,?,?)";
-        try(PreparedStatement statement = con.prepareStatement(createProduct)) {
-            statement.setInt(1, codigo);
-            statement.setString(2, nombre);
-            statement.setInt(3, precio);
-            statement.execute();
-            con.commit();
-            
+        //Crear preparedStatement
+        String insertarProducto = "INSERT INTO ORD_PRODUCTOS (codigo, nombre, precio) VALUES (?,?,?)";
+        try (PreparedStatement registrarProducto = con.prepareStatement(insertarProducto);){
+            //Asignar parámetros
+            registrarProducto.setInt(1, codigo);
+            registrarProducto.setString(2, nombre);
+            registrarProducto.setInt(3, precio);
+            //usar 'execute'
+            registrarProducto.execute();
         } catch (Exception e) {
-            e.printStackTrace();
-        }        
+            System.out.println("Ocurrio un problema con la operacion");
+        }
+        
+        con.commit();   
     }
     
     /**
@@ -103,21 +104,28 @@ public class JDBCExample {
      */
     public static List<String> nombresProductosPedido(Connection con, int codigoPedido){
         List<String> np=new LinkedList<>();
-        String query = "SELECT * from ORD_PRODUCTOS join ORD_DETALLE_PEDIDO ON (ORD_DETALLE_PEDIDO.pedido_fk = ORD_PRODUCTOS.codigo) WHERE ORD_PRODUCTOS.codigo = ?";
-        try (PreparedStatement nombresPedidos = con.prepareStatement(query)) {
-            nombresPedidos.setInt(1, codigoPedido);
-            ResultSet rs = nombresPedidos.executeQuery();
+        
+        //Crear prepared statement
+        String consultarProductos = "SELECT pr.nombre FROM ORD_PEDIDOS AS pe JOIN ORD_DETALLE_PEDIDO AS de ON (de.pedido_fk = pe.codigo) JOIN ORD_PRODUCTOS AS pr ON (de.producto_fk = pr.codigo) WHERE pe.codigo = ?";
 
-            while(rs.next()){
-                String name = rs.getString("nombre");
-                np.add(name);
+        try (PreparedStatement nombresProductos = con.prepareStatement(consultarProductos);){
+            //asignar parámetros
+            nombresProductos.setInt(1, codigoPedido);
+            //usar executeQuery
+            ResultSet resultSet = nombresProductos.executeQuery();
+            //Sacar resultados del ResultSet
+            while (resultSet.next()) {
+                //Llenar la lista y retornarla
+                String productName = resultSet.getString("nombre");
+                np.add(productName);
             }
-
         } catch (SQLException e) {
-            System.out.println("El dato ya existe en la base de datos");
+            System.out.println("Ocurrio un problema con la operacion");
         }
+             
         return np;
     }
+
     
     /**
      * Calcular el costo total de un pedido
@@ -126,22 +134,25 @@ public class JDBCExample {
      * @return el costo total del pedido (suma de: cantidades*precios)
      */
     public static int valorTotalPedido(Connection con, int codigoPedido){
-        
-        int value = 0;
-        String query = "SELECT SUM(ORD_PRODUCTOS.precio * ORD_DETALLE_PEDIDO.cantidad) AS res FROM ORD_DETALLE_PEDIDO JOIN ORD_PRODUCTOS ON ORD_PRODUCTOS.codigo = ORD_DETALLE_PEDIDO.producto_fk WHERE ORD_DETALLE_PEDIDO.pedido_fk = ?";
-        
-        try(PreparedStatement statement = con.prepareStatement(query)){
-            statement.setInt(1, codigoPedido);
-            ResultSet res = statement.executeQuery();
-            while(res.next()){
-                value = res.getInt("res");
+        int valorPedido = 0;
+
+        //Crear prepared statement
+        String totalProductos = "SELECT SUM(pr.precio * de.cantidad) AS total FROM ORD_PEDIDOS AS pe JOIN ORD_DETALLE_PEDIDO AS de ON (de.pedido_fk = pe.codigo) JOIN ORD_PRODUCTOS AS pr ON (de.producto_fk = pr.codigo) WHERE pe.codigo = ?";
+
+        try (PreparedStatement valorTotal = con.prepareStatement(totalProductos)){
+            //asignar parámetros
+            valorTotal.setInt(1, codigoPedido);
+            //usar executeQuery
+            ResultSet total = valorTotal.executeQuery();
+            //Sacar resultado del ResultSet
+            while (total.next()) {
+                valorPedido = total.getInt("total");
             }
-            
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("Ocurrio un problema con la operacion");
         }
         
-        return value;
+        return valorPedido;
     }
     
 

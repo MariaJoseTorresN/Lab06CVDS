@@ -74,19 +74,24 @@ public class MyBatisExample {
             ItemMapper itemMapper = sqlss.getMapper(ItemMapper.class);
             TipoItemMapper tipoItemMapper = sqlss.getMapper(TipoItemMapper.class);
             
-            //Pruebas Mapper Usuario OK
-            //System.out.println(clienteMapper.consultarClientes()); //Bill Clinton
-            //System.out.println(clienteMapper.consultarCliente(98347)); //Bill Clinton
+            //Insertar tipo item
+            //tipoItemMapper.addTipoItem("Kristhian");
 
-            //Pruebas Mapper Item OK
-            //System.out.println(itemMapper.consultarItem(2));
-            //System.out.println(itemMapper.consultarItems());
+            //Consultar clientes
+            //System.out.println(clienteMapper.consultarClientes());
+            //System.out.println(clienteMapper.consultarCliente(68));
 
-            //Insertar tipo item NO Ok
-            tipoItemMapper.addTipoItem("Kristhian");
-            TipoItem tipo = tipoItemMapper.getTipoItem(1);
-            itemMapper.insertarItem(new Item(tipo, 3467289, "Kristhian", "xd", new Date(), 50000, "formatoRenta", "undefined"));
-            clienteMapper.agregarItemRentadoACliente(98347, 3467287, new Date(), new Date());
+            //Agregar Item Rentado
+            //clienteMapper.agregarItemRentadoACliente(68, 18, new Date(), new Date());
+
+            //Agregar Item
+            //TipoItem tipo = new TipoItem(1, "Descripcion");
+            //itemMapper.insertarItem(new Item(tipo, 188, "Kristhian", "Solo millos", new Date(), 1000000, "formatoRenta", "undefined"));
+
+            //Consultar Items
+            //System.out.println(itemMapper.consultarItems()); 
+            //System.out.println(itemMapper.consultarItem(1)); 
+
             sqlss.commit();
             sqlss.close();
         } catch (Exception e) {
